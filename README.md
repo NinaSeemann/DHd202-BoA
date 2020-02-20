@@ -2,16 +2,19 @@
 This repository contains the set of scripts that will take TEI encoded XML files and process them into a PDF.
 Furthermore, it contains the files used to prepare the Book of Abstracts of the DHd 2020 conference. Please be aware that the texts are under the standard copyright of the authors, if not stated explicitly otherwise.
 
-#### Code was tested on MacBook Pro running MacOs 10.14.6 with 16GB of memory.
+The following steps explain how to generate the Book of
+Abstracts. They are based on
+[Karin Dalziels introduction](https://github.com/karindalziel/TEI-to-PDF)
+but with some modifications to reflect the changes in the code over
+the years. 
 
-# How to BoA
-For an informal overview see
-[Karin Dalziels introduction](https://github.com/karindalziel/TEI-to-PDF).
+#### Code was tested on MacBook Pro running macOS 10.14.6 with 16GB of memory.
 
 Step 0: Check out or download files from github
 ===============================================
 
-You'll get a folder with a name like "DHd2020-BoA". All other instructions refer to this folder as the starting place.
+You'll get a folder with a name like "DHd2020-BoA". All other
+instructions refer to this folder as the root folder
 
 Step 1: Set up your environment
 =======================
@@ -27,7 +30,8 @@ it in the "lib" folder or change the code below to match your download. Code has
 ----------------------------------------
 
 Download the FOP Binary files from
-[The Apache FOP Page](http://xmlgraphics.apache.org/fop/) and place inside the "lib" folder, or change the commands below to reference where you keep the FO processor. Scripts have been tested with FOP 2.1.
+[The Apache FOP Page](http://xmlgraphics.apache.org/fop/) and place it
+inside the "lib" folder or change the commands below to match your download. Scripts have been tested with FOP 2.1.
 
 #### Change the conf file
 
@@ -39,7 +43,7 @@ to look for them. Place the following inside the &lt;renderer
 mime="application/pdf">/&lt;fonts> tags:
 
 	<directory recursive="true">/Non-Standard_Path/Fonts</directory>
-		<auto-detect/>
+	<auto-detect/>
 
 For further information on font embedding, visit the
 [ Apache FOP Font page](https://xmlgraphics.apache.org/fop/2.0/fonts.html).
@@ -54,7 +58,7 @@ which was sufficient to generate this years BoA (283 pages).
 1c: File structure
 --------------------
 
-There have been some minor changes over the years. The final file structure should look like this:
+There have been some changes over the years. The final file structure should look like this:
 
 * config (folder)
   * config.sh
@@ -77,29 +81,25 @@ There have been some minor changes over the years. The final file structure shou
 
 #### TEI
 
-All the TEI must be P5 and categorized into 'Workshop', 'Panel',
+TEI gilenames are not used for categorization, the code uses the category in the header file to place the content in the correct category.
+Therefore, all TEI files must be P5 and categorized into 'Workshop', 'Panel',
 'Vortrag', 'Doctoral Consortium' or 'Posterpräsentation' so the book
 can generate the proper headings. The categorization is already present when
 files are downloaded from the ConfTool. For example code see [Karin Dalziels README](https://github.com/karindalziel/TEI-to-PDF).
 
-Make sure the xml:id matches the document name and is unique
-(otherwise, the code will crash when one author is listed as author in
-multiple papers). 
-E.G. ab-002.xml must have an xml:id of ab-002:
+* xml:id: Make sure the xml:id matches the document name and is
+unique! Otherwise, the code will crash when a person is listed as author in
+multiple papers, e.g. ab-002.xml must have an xml:id of ab-002:
 
-	<TEI xml:id="ab-002" xmlns="http://www.tei-c.org/ns/1.0">
+		<TEI xml:id="ab-002" xmlns="http://www.tei-c.org/ns/1.0">
 
-TEI Filenames are not used for categorization, the code uses the category in the header file (as above) to place the content in the correct category.
-
-Furthermore, make sure that every <graphic> is included in a <figure>
-element. Otherwise, those images will not be displayed in the final
-pdf (and there is no warning!!!).
+* graphics: Make sure that every &lt;graphic&gt; is included in a
+&lt;figure&gt; element. Otherwise, those images will not be displayed in the final
+pdf. (Beware that this does not issue a warning!!!)
 
 #### Images
 
-Change all file paths to local.
-
-E.G. "path/to/image/image001.jpg" should be simply "image001.jpg"
+Change all file paths to local, e.g. "path/to/image/image001.jpg" should be simply "image001.jpg"
 
 1e: Set your configuration options
 -----------------------------------------
@@ -115,33 +115,30 @@ Command line instructions are below.
 
 1: Place all files and images in input/xml and input/images, respectively
 
-1b. Open a terminal and change directory (cd command) to the root folder. 
+2: Open a terminal and change directory (cd command) to the root folder. 
 
-2: Create the Book_Corpus.xml corpus file with the TEIcorpus_producer.xsl XSL with this command:
+3: Create the Book_Corpus.xml corpus file with the TEIcorpus_producer.xsl XSL with this command:
 
-	 java -jar lib//SaxonHE9-8-0-7J/saxon9he.jar lib/tei2pdf/empty.xml
-     > output/Book_Corpus.xml
+	 java -jar lib/SaxonHE9-8-0-7J/saxon9he.jar lib/tei2pdf/empty.xml > output/Book_Corpus.xml
 
 This uses the saxon engine to transform all the XML in the final_xml folder into a TEI Corpus file called "Book_Corpus.xml"
 
-3: Create the .fo file
+4: Create the .fo file:
 
-	java -jar lib/SaxonHE9-8-0-7J/saxon9he.jar output/Book_Corpus.xml
-	lib/tei2pdf/xsl-fo-producer.xsl > output/pdf.fo
+	java -jar lib/SaxonHE9-8-0-7J/saxon9he.jar output/Book_Corpus.xml lib/tei2pdf/xsl-fo-producer.xsl > output/pdf.fo
 
-This creates a file called pdf.fo. Any errors (missing images, etc) will be exported to the screen. You may get a notice about missing fonts - this means either your font name is incorrect, or you have not set FOP to use your system fonts in the conf file (detailed above).
+This creates a file called pdf.fo. Any errors (missing images, etc) will be exported to the screen. You may get a notice about missing fonts - this means either your font name is incorrect or you have not set FOP to use your system fonts in the conf file (detailed above).
 
-4: Create PDF
+5: Create the .pdf file:
 
 	lib/fop-2.1/fop -d64 -Xmx3000m -c lib/fop-2.1/conf/fop.xconf output/pdf.fo output/pdf.pdf
 
-If you get an out of memory error, see section on configuring FOP above.
-
-You will likely get a bunch of font errors, but these may or may not matter. Check your final file to make sure all characters display correctly. 
-
 This will create the final PDF. 
 
-#### Script
+If you get an out of memory error, see section on configuring FOP
+above. You will likely get a bunch of font errors, but these may or may not matter. Check your final file to make sure all characters display correctly. 
+
+#### Script / Config file
 
 For your convenience, there is a script to run everything at once, you can run this by typing ./run.sh. If this fails, running each step individually will give better error reporting.
 
