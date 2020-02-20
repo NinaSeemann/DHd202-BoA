@@ -142,10 +142,10 @@ If you get an out of memory error, see section on configuring FOP
 above. You will likely get a bunch of font errors, but these may or may not matter. Check your final file to make sure all characters display correctly. 
 
 #### Script / Config file
-There are two convenient scripts that help in running files. 
+There are two convenient scripts that help running files. 
 * run.sh : Type ./run.sh in the root folder and everything is run at
 once. If this fails, running each step individually will give better
-error reporting. This file gets the information about the setup from a
+error reporting. This file gets the information about the setup from the
 config file. 
 * config/config.sh : This file contains all information about the
   setup environment, e.g. Saxon-jar, FOP base directory, pdf output directory, ... If your
@@ -186,13 +186,13 @@ lib/tei2pdf/xsl-fo-producer.xsl
 lib/fop-2.1/conf/fop.xconf
 -----------------------
 I had to include the Noto Sans font in the config file (otherwise I
-got an error message). You should remove the lines 81-86 if you are
+got an error message). You should remove the lines 81-86, if you are
 planning on using my config.
 
 run.sh
 -----------------------
 Due to the embedding of the Noto Sans font, I had to add the option
-'-nocs', otherwise there would be another error message. Again, if your
+'-nocs', otherwise I got another error message. Again, if your
 want to use my config, you probably should remove this option.
 
 
