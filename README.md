@@ -13,8 +13,8 @@ the years.
 Step 0: Check out or download files from github
 ===============================================
 
-You'll get a folder with a name like "DHd2020-BoA". All other
-instructions refer to this folder as the root folder
+You'll get a folder with the name "DHd2020-BoA". All other
+instructions refer to this folder as the root folder.
 
 Step 1: Set up your environment
 =======================
@@ -35,9 +35,9 @@ inside the "lib" folder or change the commands below to match your download. Scr
 
 #### Change the conf file
 
-The conf file can be found in /lib/fop/conf/fop.xconf
+The conf file can be found here:  /lib/fop/conf/fop.xconf
 
-You can use <auto-detect/> to register all fonts on your system. If
+You can use &lt;auto-detect/&gt; to register all fonts on your system. If
 some fonts are not in the standard directory, you can tell FOP where
 to look for them. Place the following inside the &lt;renderer
 mime="application/pdf">/&lt;fonts> tags:
@@ -81,21 +81,24 @@ There have been some changes over the years. The final file structure should loo
 
 #### TEI
 
-TEI gilenames are not used for categorization, the code uses the category in the header file to place the content in the correct category.
+TEI filenames are not used for categorization, the code uses the category in the header file to place the content in the correct category.
 Therefore, all TEI files must be P5 and categorized into 'Workshop', 'Panel',
 'Vortrag', 'Doctoral Consortium' or 'Posterpräsentation' so the book
 can generate the proper headings. The categorization is already present when
 files are downloaded from the ConfTool. For example code see [Karin Dalziels README](https://github.com/karindalziel/TEI-to-PDF).
 
-* xml:id: Make sure the xml:id matches the document name and is
+* xml:id : Make sure the xml:id matches the document name and is
 unique! Otherwise, the code will crash when a person is listed as author in
 multiple papers, e.g. ab-002.xml must have an xml:id of ab-002:
 
 		<TEI xml:id="ab-002" xmlns="http://www.tei-c.org/ns/1.0">
 
-* graphics: Make sure that every &lt;graphic&gt; is included in a
-&lt;figure&gt; element. Otherwise, those images will not be displayed in the final
-pdf. (Beware that this does not issue a warning!!!)
+* graphics : There are two important things to check. (i) Make sure
+that every &lt;graphic&gt; (i.e. image) is included in a
+&lt;figure&gt;. Otherwise, those images will not be displayed in the final
+pdf. Missing figure does not issue a warning! (ii) Make sure, that only **one** 
+&lt;graphic&gt; is included in a figure. Otherwise, the second image
+will not be displayed. Again, this does not issue a warning. 
 
 #### Images
 
@@ -139,9 +142,15 @@ If you get an out of memory error, see section on configuring FOP
 above. You will likely get a bunch of font errors, but these may or may not matter. Check your final file to make sure all characters display correctly. 
 
 #### Script / Config file
-
-For your convenience, there is a script to run everything at once, you can run this by typing ./run.sh. If this fails, running each step individually will give better error reporting.
-
+There are two convenient scripts that help in running files. 
+* run.sh : Type ./run.sh in the root folder and everything is run at
+once. If this fails, running each step individually will give better
+error reporting. This file gets the information about the setup from a
+config file. 
+* config/config.sh : This file contains all information about the
+  setup environment, e.g. Saxon-jar, FOP base directory, pdf output directory, ... If your
+  environment setup differs from the way described above, you can
+  adapt the necessary information here. 
 
 Changes in code compared to previous year
 ===============================================
@@ -176,4 +185,14 @@ lib/tei2pdf/xsl-fo-producer.xsl
 
 lib/fop-2.1/conf/fop.xconf
 -----------------------
+I had to include the Noto Sans font in the config file (otherwise I
+got an error message). You should remove the lines 81-86 if you are
+planning on using my config.
+
+run.sh
+-----------------------
+Due to the embedding of the Noto Sans font, I had to add the option
+'-nocs', otherwise there would be another error message. Again, if your
+want to use my config, you probably should remove this option.
+
 
