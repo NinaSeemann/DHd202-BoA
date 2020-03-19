@@ -48,6 +48,12 @@ mime="application/pdf">/&lt;fonts> tags:
 For further information on font embedding, visit the
 [ Apache FOP Font page](https://xmlgraphics.apache.org/fop/2.0/fonts.html).
 
+#### Hyphenation with offo
+
+For hyphenation, the [offo hyphenation binaries](http://offo.sourceforge.net/index.html) are needed. 
+For FOP 1.1 and higher, there are already compiled pattern files which can be downloaded. Simply follow the link on the homepage.
+The fop-hyph.jar has to be copied into FOP's lib folder (./lib/fop-2.1/lib)
+
 #### Increase memory
 
 If you are creating a large book, you may need to increase the memory
